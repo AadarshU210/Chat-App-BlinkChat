@@ -1,6 +1,7 @@
 import Message from "../models/message.Model.js";
 import User from "../models/user.Model.js";
 import cloudinary from "../utils/cloudinary.js";
+import { getReceiverSocketId, io } from "../utils/socket.js";
 
 export const getUsersForSidebar = async(req, res) => {
    try{
@@ -46,13 +47,20 @@ export const sendMessage = async(req, res) => {
      }
 
      const newMessage = new Message({
-        senderId,
+        senderId: currentUserId,
         receiverId,
         text,
         image: imageUrl
      })
 
      await newMessage.save();
+     
+     // SocketId of user to whom we are sending message
+     const receiverSocketId = getReceiverSocketId(receiverId)
+     if(receiverSocketId){
+      //io.emit() will broadcast event to all socket ids, therefore we have to be specific
+      io.to(receiverSocketId).emit("newMessage", newMessage)
+     }
 
      res.status(201).json(newMessage)
    }catch(error){
