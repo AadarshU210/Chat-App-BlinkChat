@@ -12,6 +12,7 @@ BlinkChat is a real-time one-on-one chat application built using the MERN stack 
 🧑‍💻 Modern UI: Responsive and clean interface built with React
 
 🛠️ Tech Stack
+
 Frontend: React, socket.io-client, Axios
 
 Backend: Node.js, Express, MongoDB, socket.io
